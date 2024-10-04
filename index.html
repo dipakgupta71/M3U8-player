@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom M3U8 Player with Speed & Contact</title>
+    <style>
+        body {
+            background-color: #1f1f1f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background-color: #2b2b2b;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .video-wrapper {
+            margin-bottom: 20px;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .controls button {
+            background-color: #444;
+            border: none;
+            padding: 10px;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls button:hover {
+            background-color: #666;
+        }
+
+        .bottom-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .bottom-bar button {
+            background-color: #444;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .bottom-bar button:hover {
+            background-color: #666;
+        }
+
+        .contact {
+            background-color: #28a745;
+        }
+
+        .contact:hover {
+            background-color: #218838;
+        }
+
+        .light-mode {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        .light-mode:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="video-wrapper">
+            <video id="videoPlayer" controls></video>
+        </div>
+        <div class="controls">
+            <button onclick="skip(-5)">-5s</button>
+            <button onclick="skip(5)">+5s</button>
+            <button id="speedButton" onclick="changeSpeed()">1.0x</button>
+        </div>
+        <div class="bottom-bar">
+            <button class="light-mode" onclick="toggleDarkMode()">Light Mode</button>
+            <button class="contact" onclick="contactMe()">Contact Me</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        const video = document.getElementById('videoPlayer');
+        const videoUrl = 'your-m3u8-url-here'; // Replace with the actual M3U8 link
+
+        // Load video using hls.js
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(videoUrl);
+            hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoUrl;
+        }
+
+        // Skip forward/backward
+        function skip(seconds) {
+            video.currentTime += seconds;
+        }
+
+        // Playback speed functionality
+        let speed = 1;
+        function changeSpeed() {
+            speed += 0.5;
+            if (speed > 4) speed = 1; // Reset speed to 1 after 4x
+            video.playbackRate = speed;
+            document.getElementById('speedButton').textContent = speed.toFixed(1) + 'x';
+        }
+
+        // Toggle dark/light mode
+        function toggleDarkMode() {
+            const body = document.body;
+            const button = document.querySelector('.light-mode');
+            if (body.style.backgroundColor === 'white') {
+                body.style.backgroundColor = '#1f1f1f';
+                body.style.color = '#fff';
+                button.textContent = 'Light Mode';
+            } else {
+                body.style.backgroundColor = 'white';
+                body.style.color = '#333';
+                button.textContent = 'Dark Mode';
+            }
+        }
+
+        // Redirect to Telegram contact
+        function contactMe() {
+            window.location.href = "https://t.me/yourTelegramUsername"; // Replace with your Telegram contact link
+        }
+    </script>
+
+</body>
+</html>
